@@ -102,7 +102,10 @@ func main() {
 	}
 
 	if len(fs.Args()) > 0 {
-		getOrRun(sqlH, fs.Args(), *ttl, *getOnly, *verbose)
+		err := getOrRun(sqlH, fs.Args(), *ttl, *getOnly, *verbose)
+		if err != nil {
+			log.Fatalf("Error: %v\n", err)
+		}
 	}
 }
 
@@ -137,21 +140,25 @@ func getOrRun(dbh *sqlHandler, cmd []string, ttl time.Duration, getOnly, verbose
 	if verbose {
 		log.Println("Running external command...")
 	}
+	var cmdErr error
 	valBytes, err := execCommand(cmd[0], cmd[1:])
-	if err != nil {
-		log.Fatalf("Cannot run command: %v\n", err)
-	}
 	val = string(valBytes)
-
-	if verbose {
-		log.Println("Storing item in cache DB...")
-	}
-	if err = dbh.SetItem(cmdString, val); err != nil {
-		log.Printf("Cannot update cache: %v", err)
+	if err != nil {
+		cmdErr = fmt.Errorf("command failed: %v", err)
+		if verbose {
+			log.Println("Command failed; not updating cache DB...")
+		}
+	} else {
+		if verbose {
+			log.Println("Storing item in cache DB...")
+		}
+		if err = dbh.SetItem(cmdString, val); err != nil {
+			log.Printf("Cannot update cache: %v", err)
+		}
 	}
 
 	fmt.Print(val)
-	return nil
+	return cmdErr
 }
 
 func fileExists(filename string) bool {
