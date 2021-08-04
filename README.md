@@ -89,7 +89,7 @@ Drop all cache entries older than 1 hour:
 
 The usual process for Golang builds should work fine:
 
-    go install github.com/McKael/clic
+    go install github.com/McKael/clic@latest
 
 Note: `clic` uses `mattn/go-sqlite3`, which currently uses cgo.
 
