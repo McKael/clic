@@ -1,4 +1,4 @@
-module clic
+module github.com/McKael/clic
 
 go 1.16
 
