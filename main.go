@@ -124,13 +124,13 @@ func getOrRun(dbh *sqlHandler, cmd []string, ttl time.Duration, getOnly, verbose
 		// Is the cached value still valid?
 		if time.Now().Sub(time.Unix(timestamp, 0)) <= ttl {
 			if verbose {
-				log.Printf("Using cached result (timestamp %d)\n", timestamp)
+				log.Printf("Using cached result (timestamp %d, TTL %v)\n", timestamp, ttl)
 			}
 			fmt.Print(val)
 			return nil
 		}
 		if verbose {
-			log.Printf("Found expired result in cache (timestamp %d)\n", timestamp)
+			log.Printf("Found expired result in cache (timestamp %d, TTL %v)\n", timestamp, ttl)
 		}
 	}
 	if getOnly {
