@@ -91,8 +91,6 @@ The usual process for Golang builds should work fine:
 
     go install github.com/McKael/clic@latest
 
-Note: `clic` uses `mattn/go-sqlite3`, which currently uses cgo.
-
 ## Issues
 
 * The standard error of the called process is discarded.
